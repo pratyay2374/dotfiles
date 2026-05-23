@@ -76,17 +76,13 @@ automatically-unhide-macos-hidden-apps = false
 if.app-id = 'com.microsoft.VSCode'
 run = ['layout accordion', 'move-node-to-workspace 1']
 
-[[on-window-detected]]
-if.app-name-regex-substring = '^(Arc|ChatGPT Atlas|Dia|Comet)$'
-run = ['layout accordion', 'move-node-to-workspace 3']
-
 [[on-window-detected]] 
-if.app-name-regex-substring = '^(Antigravity)$' 
+if.app-name-regex-substring = '^(Antigravity IDE)$' 
 run = ['layout accordion', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-name-regex-substring = '^(Ghostty)'
-run = ['layout tiling', 'move-node-to-workspace 2']
+run = ['layout floating', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
 if.app-name-regex-substring = '^(Music)$'
@@ -98,7 +94,7 @@ run = ['layout tiling', 'move-node-to-workspace 0']
 
 [[on-window-detected]]
 if.app-name-regex-substring = '^(Zen|Arc|Comet|Dia|ChatGPT Atlas)$'
-run = ['layout tiling', 'move-node-to-workspace 3']
+run = ['layout accordion', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
 if.app-name-regex-substring = '^(Claude|ChatGPT)$'
