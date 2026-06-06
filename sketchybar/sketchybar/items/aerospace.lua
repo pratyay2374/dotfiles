@@ -1,11 +1,16 @@
-function dump(o)
+-- aerospace.lua — Aerospace window manager helpers
+-- Provides functions to query workspaces, monitors, and visibility state.
+local M = {}
+
+--- Pretty-print a Lua value (table or scalar) for debugging.
+function M.dump(o)
     if type(o) == 'table' then
         local s = '{ '
         for k, v in pairs(o) do
             if type(k) ~= 'number' then
                 k = '"' .. k .. '"'
             end
-            s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+            s = s .. '[' .. k .. '] = ' .. M.dump(v) .. ','
         end
         return s .. '} '
     else
@@ -13,7 +18,8 @@ function dump(o)
     end
 end
 
-function explode(div, str)
+--- Split a string by a delimiter into a table of substrings.
+function M.explode(div, str)
     if (div == '') then
         return false
     end
@@ -28,7 +34,8 @@ function explode(div, str)
     return arr
 end
 
-function parse_string_to_table(s)
+--- Parse a newline-separated string into a table of lines.
+function M.parse_string_to_table(s)
     local result = {}
     for line in s:gmatch("([^\n]+)") do
         table.insert(result, line)
@@ -36,7 +43,8 @@ function parse_string_to_table(s)
     return result
 end
 
-function get_workspaces()
+--- Return a table of all aerospace workspace names.
+function M.get_workspaces()
     local file = io.popen("aerospace list-workspaces --all")
     if not file then
         return {}
@@ -44,10 +52,11 @@ function get_workspaces()
     local result = file:read("*a")
     file:close()
 
-    return parse_string_to_table(result)
+    return M.parse_string_to_table(result)
 end
 
-function get_current_workspace()
+--- Return the name of the currently focused workspace.
+function M.get_current_workspace()
     local file = io.popen("aerospace list-workspaces --focused")
     if not file then
         return nil
@@ -55,10 +64,11 @@ function get_current_workspace()
     local result = file:read("*a")
     file:close()
 
-    return parse_string_to_table(result)[1]
+    return M.parse_string_to_table(result)[1]
 end
 
-function get_monitors()
+--- Return a table of monitor IDs.
+function M.get_monitors()
     local file = io.popen("aerospace list-monitors | awk '{print $1}'")
     if not file then
         return {}
@@ -66,10 +76,11 @@ function get_monitors()
     local result = file:read("*a")
     file:close()
 
-    return parse_string_to_table(result)
+    return M.parse_string_to_table(result)
 end
 
-function get_workspaces_on_monitor(monitor)
+--- Return all workspace names assigned to the given monitor.
+function M.get_workspaces_on_monitor(monitor)
     local file = io.popen("aerospace list-workspaces --monitor " .. monitor)
     if not file then
         return {}
@@ -77,10 +88,11 @@ function get_workspaces_on_monitor(monitor)
     local result = file:read("*a")
     file:close()
 
-    return parse_string_to_table(result)
+    return M.parse_string_to_table(result)
 end
 
-function get_visible_workspace_on_monitor(monitor)
+--- Return the visible workspace name on the given monitor.
+function M.get_visible_workspace_on_monitor(monitor)
     local file = io.popen("aerospace list-workspaces --monitor " .. monitor .. " --visible")
     if not file then
         return nil
@@ -88,16 +100,14 @@ function get_visible_workspace_on_monitor(monitor)
     local result = file:read("*a")
     file:close()
 
-    return parse_string_to_table(result)[1]
+    return M.parse_string_to_table(result)[1]
 end
 
-function is_workspace_selected(workspace)
-    local available_monitors = get_monitors()
-    -- print("Checking: " .. workspace .. " Available monitors: " .. dump(available_monitors))
+--- Check whether a workspace is currently visible on any monitor.
+function M.is_workspace_selected(workspace)
+    local available_monitors = M.get_monitors()
     for _, monitor in ipairs(available_monitors) do
-        local visible_workspace = get_visible_workspace_on_monitor(monitor)
-        -- print('types' .. type(visible_workspace) .. ' - ' .. type(workspace))
-        -- print("Checking: " .. workspace .. " On Monitor: " .. monitor .. " Result: " .. visible_workspace .. ' - ', (visible_workspace == workspace))
+        local visible_workspace = M.get_visible_workspace_on_monitor(monitor)
         if visible_workspace == workspace then
             return true
         end
@@ -105,3 +115,5 @@ function is_workspace_selected(workspace)
 
     return false
 end
+
+return M

@@ -256,7 +256,8 @@ alt-a = 'exec-and-forget open -a /Applications/Antigravity.app'
 alt-g = 'exec-and-forget open -a /Applications/Ghostty.app'
 alt-m = 'exec-and-forget open -a "Music"'
 alt-i = 'exec-and-forget open -a /System/Applications/iPhone\ Mirroring.app'
-alt-z = 'exec-and-forget open -a /Applications/Zen.app'
+# alt-z = 'exec-and-forget open -a /Applications/Zen.app'
+alt-b = 'exec-and-forget open -a /Applications/Arc.app'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes

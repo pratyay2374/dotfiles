@@ -59,6 +59,7 @@ return {
 
 
     app = {
+        max_apps_per_workspace = 8,
         background = {
             color = colors.with_alpha(colors.black, 0.3),
         }
