@@ -65,26 +65,35 @@ local function attach_hover_handlers(app_item, ws_data, app_idx)
         if not ws_data.app_names[app_idx] then return end
         if is_hovered then return end
         is_hovered = true
-        local window_id = ws_data.window_ids[app_idx]
-        local is_focused = (window_id == ws_data.get_focused_window_id())
-        if not is_focused then
-            app_item:set({
-                background = { color = colors.with_alpha(colors.solid_white, 0.5) }
-            })
-        end
+        -- Defer :set() to avoid deadlock: sketchybar sends mouse event via
+        -- Mach IPC and blocks; if the callback calls :set() synchronously it
+        -- sends a Mach message back → both sides wait forever.
+        sbar.delay(0, function()
+            local window_id = ws_data.window_ids[app_idx]
+            local is_focused = (window_id == ws_data.get_focused_window_id())
+            if not is_focused and is_hovered then
+                app_item:set({
+                    background = { color = colors.with_alpha(colors.solid_white, 0.5) }
+                })
+            end
+        end)
     end)
 
     app_item:subscribe("mouse.exited", function()
         if not ws_data.app_names[app_idx] then return end
         if not is_hovered then return end
         is_hovered = false
-        local window_id = ws_data.window_ids[app_idx]
-        local is_focused = (window_id == ws_data.get_focused_window_id())
-        if not is_focused then
-            app_item:set({
-                background = { color = colors.transparent }
-            })
-        end
+        -- Defer :set() to avoid the same Mach IPC deadlock as mouse.entered.
+        sbar.delay(0, function()
+            if is_hovered then return end
+            local window_id = ws_data.window_ids[app_idx]
+            local is_focused = (window_id == ws_data.get_focused_window_id())
+            if not is_focused then
+                app_item:set({
+                    background = { color = colors.transparent }
+                })
+            end
+        end)
     end)
 end
 

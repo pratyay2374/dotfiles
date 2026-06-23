@@ -3,7 +3,7 @@ local colors = require("colors")
 local settings = require("settings")
 
 -- Launch the mem_load event provider (fires "mem_update" every 2s)
-sbar.exec("killall mem_load >/dev/null; $CONFIG_DIR/helpers/event_providers/mem_load/bin/mem_load mem_update 2.0")
+sbar.exec("killall mem_load 2>/dev/null; $CONFIG_DIR/helpers/event_providers/mem_load/bin/mem_load mem_update 2.0")
 
 local mem = sbar.add("graph", "widgets.mem", 45, {
     position = "right",

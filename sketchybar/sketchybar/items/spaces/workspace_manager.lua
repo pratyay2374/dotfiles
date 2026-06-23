@@ -22,6 +22,15 @@ M.focused_workspace = nil    -- Currently focused workspace name
 -- Core refresh logic
 -- ---------------------------------------------------------------------------
 
+--- Return false for system daemons that AeroSpace surfaces but have no app icon.
+-- These show up as bundle-ID-style names (e.g. "com.apple.LocalAuthentication.UIAgent").
+local function is_user_app(app_name)
+    if not app_name or app_name == "" then return false end
+    if app_name:match("^com%.apple%.") then return false end
+    if app_name:match("UIAgent$") or app_name:match("Daemon$") then return false end
+    return true
+end
+
 --- Update app icons for a single workspace using fresh window data.
 -- @param workspace string
 -- @param apps table  Array of {["app-name"], ["window-id"]} from aerospace
@@ -46,9 +55,15 @@ function M.refresh()
         for _, workspace in ipairs(workspaces) do
             sbar.exec(
                 "aerospace list-windows --workspace " .. workspace
-                    .. " --format '%{window-id} %{app-name}' --json ",
+                    .. " --format '%{window-id} %{app-name}' --json 2>/dev/null",
                 function(apps)
-                    update_workspace(workspace, apps)
+                    local user_apps = {}
+                    for _, app in ipairs(apps) do
+                        if is_user_app(app["app-name"]) then
+                            table.insert(user_apps, app)
+                        end
+                    end
+                    update_workspace(workspace, user_apps)
                 end)
         end
     end)
@@ -56,7 +71,7 @@ end
 
 --- Fetch the focused window ID from aerospace, then refresh all workspaces.
 function M.update_focused_and_refresh()
-    sbar.exec("aerospace list-windows --focused --format '%{window-id}'", function(result)
+    sbar.exec("aerospace list-windows --focused --format '%{window-id}' 2>/dev/null", function(result)
         local id_str = result:gsub("%s+$", "")
         M.focused_window_id = tonumber(id_str)
         M.refresh()
