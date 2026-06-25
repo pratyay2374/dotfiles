@@ -10,7 +10,7 @@ after-startup-command = [
 exec-on-workspace-change = [
   '/bin/bash',
   '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE && sketchybar --trigger space_windows_change'
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE && sketchybar --trigger space_windows_change; notifyutil -p com.barik-enhanced.aerospace-refresh'
 ]
 
 # Start AeroSpace at login
@@ -43,7 +43,7 @@ default-root-container-orientation = 'auto'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 # Trigger sketchybar update when focus changes (including between windows of same app)
-on-focus-changed = ['exec-and-forget sketchybar --trigger window_focus_changed']
+on-focus-changed = ['exec-and-forget sketchybar --trigger window_focus_changed; notifyutil -p com.barik-enhanced.aerospace-refresh']
 
 # This line was causing shift of apps when enter into sleep mode or lock screen
 # on-focus-changed = ['flatten-workspace-tree', 'balance-sizes']
@@ -123,7 +123,7 @@ inner.horizontal = 1
 inner.vertical = 1
 outer.left = 1
 outer.bottom = 1
-outer.top = [{ monitor."^built-in retina display$" = 3 }, 42]
+outer.top = [{ monitor."^built-in retina display$" = 2 }, 42]
 outer.right = 1
 
 # inner.horizontal = 3
