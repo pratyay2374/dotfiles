@@ -1,16 +1,28 @@
+config-version = 2
+
+# In config-version 1, workspaces referenced in keybindings persisted implicitly.
+# config-version 2 requires this to be explicit, so list all workspaces used below.
+persistent-workspaces = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
 # # Run SketchyBar together with AeroSpace
 # # sketchybar has a built-in detection of already running process,
 # # so it won't be run twice on AeroSpace restart
 after-startup-command = [
-  'exec-and-forget sketchybar',
+  # 'exec-and-forget sketchybar',
   # 'exec-and-forget /Users/pratyaypatel/JankyBorders/bin/borders'
 ]
 
 # Notify Sketchybar about workspace change
+# exec-on-workspace-change = [
+#   '/bin/bash',
+#   '-c',
+#   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE && sketchybar --trigger space_windows_change; notifyutil -p com.barik-enhanced.aerospace-refresh'
+# ]
+
 exec-on-workspace-change = [
   '/bin/bash',
   '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE && sketchybar --trigger space_windows_change; notifyutil -p com.barik-enhanced.aerospace-refresh'
+  'notifyutil -p com.barik-enhanced.aerospace-refresh'
 ]
 
 # Start AeroSpace at login
@@ -81,7 +93,7 @@ if.app-name-regex-substring = '^(Antigravity IDE)$'
 run = ['layout accordion', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
-if.app-name-regex-substring = '^(Ghostty)'
+if.app-name-regex-substring = '^(Ghostty|Warp)'
 run = ['layout floating', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
@@ -103,6 +115,7 @@ run = ['layout tiling', 'move-node-to-workspace 4']
 # Default catch-all: float every new window unless a rule above handles it
 # Add fullscreen exceptions above this block (e.g., run = ['focus', 'fullscreen'])
 [[on-window-detected]]
+if = 'true'
 run = 'layout floating'
 
 # Possible values: (qwerty|dvorak)
@@ -123,7 +136,7 @@ inner.horizontal = 1
 inner.vertical = 1
 outer.left = 1
 outer.bottom = 1
-outer.top = [{ monitor."^built-in retina display$" = 2 }, 42]
+outer.top = [{ monitor."^built-in retina display$" = 3 }, 42]
 outer.right = 1
 
 # inner.horizontal = 3
