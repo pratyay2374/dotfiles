@@ -109,7 +109,7 @@ if.app-name-regex-substring = '^(Zen|Arc|Comet|Dia|ChatGPT Atlas)$'
 run = ['layout accordion', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
-if.app-name-regex-substring = '^(Claude|ChatGPT|Orca)$'
+if.app-name-regex-substring = '^(Claude|ChatGPT|Orca|Conductor)$'
 run = ['layout tiling', 'move-node-to-workspace 4']
 
 [[on-window-detected]]
