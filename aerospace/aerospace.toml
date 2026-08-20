@@ -109,7 +109,7 @@ if.app-name-regex-substring = '^(Zen|Arc|Comet|Dia|ChatGPT Atlas)$'
 run = ['layout accordion', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
-if.app-name-regex-substring = '^(Claude|ChatGPT)$'
+if.app-name-regex-substring = '^(Claude|ChatGPT|Conductor)$'
 run = ['layout tiling', 'move-node-to-workspace 4']
 
 # Default catch-all: float every new window unless a rule above handles it
